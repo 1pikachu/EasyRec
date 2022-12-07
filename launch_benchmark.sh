@@ -11,7 +11,7 @@ function main {
     # requirements
     ln -sf /home2/tensorflow-broad-product/oob_tf_models/EasyRec/dataset dataset
     pip uninstall easy-rec -y
-    python setup.py install
+    pip install .
     if [ -d "experiments" ];then
         rm -rf experiments
     fi
