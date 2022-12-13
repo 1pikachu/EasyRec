@@ -57,7 +57,7 @@ function generate_core {
             OOB_EXEC_HEADER=" CUDA_VISIBLE_DEVICES=${device_array[i]} "
         fi
         printf " ${OOB_EXEC_HEADER} \
-	    python easy_rec/python/train_eval.py --pipeline_config_path essm.config \
+	    python easy_rec/python/train_eval.py --pipeline_config_path ${model_name}.config \
                 ${addtion_options} \
         > ${log_file} 2>&1 &  \n" |tee -a ${excute_cmd_file}
     done
