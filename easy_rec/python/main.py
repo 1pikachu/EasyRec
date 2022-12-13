@@ -58,6 +58,8 @@ FinalExporter = exporter.FinalExporter
 LatestExporter = exporter.LatestExporter
 BestExporter = exporter.BestExporter
 
+tf.config.experimental.enable_tensor_float_32_execution(False)
+
 
 def _get_input_fn(data_config,
                   feature_configs,
