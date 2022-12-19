@@ -16,6 +16,21 @@ function main {
         rm -rf experiments
     fi
 
+    exec_file="easy_rec/python/train_eval.py"
+    if [ "${mode_name}" == "realtime" ];then
+       cp -r /home2/tensorflow-broad-product/oob_tf_models/EasyRec/experiments .
+       if [ $(conda > /dev/null 2>&1 && echo $? ||echo $?) -eq 0 ];then
+           evaluation_file=$(find ${CONDA_PREFIX}/lib/ -name "evaluation.py" |\
+                   grep 'tensorflow/python/training/evaluation.py')
+       else
+           evaluation_file=$(find /usr/ -name "evaluation.py" |\
+                   grep 'tensorflow/python/training/evaluation.py')
+       fi
+       cp evaluation.py ${evaluation_file}
+
+       exec_file="easy_rec/python/eval.py"
+    fi 
+
     # if multiple use 'xxx,xxx,xxx'
     model_name_list=($(echo "${model_name}" |sed 's/,/ /g'))
     batch_size_list=($(echo "${batch_size}" |sed 's/,/ /g'))
@@ -57,7 +72,7 @@ function generate_core {
             OOB_EXEC_HEADER=" CUDA_VISIBLE_DEVICES=${device_array[i]} "
         fi
         printf " ${OOB_EXEC_HEADER} \
-	    python easy_rec/python/train_eval.py --pipeline_config_path ${model_name}.config \
+	    python ${exec_file} --pipeline_config_path ${model_name}.config \
                 ${addtion_options} \
         > ${log_file} 2>&1 &  \n" |tee -a ${excute_cmd_file}
     done
