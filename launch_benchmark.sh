@@ -26,7 +26,11 @@ function main {
            evaluation_file=$(find /usr/ -name "evaluation.py" |\
                    grep 'tensorflow/python/training/evaluation.py')
        fi
-       cp evaluation.py ${evaluation_file}
+       if [[ "${tensorboard}" == "1" ]];then
+           cp evaluation_profile.py ${evaluation_file}
+       else
+           cp evaluation.py ${evaluation_file}
+       fi
 
        exec_file="easy_rec/python/eval.py"
     fi 
