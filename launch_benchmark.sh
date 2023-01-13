@@ -77,6 +77,7 @@ function generate_core {
         fi
         printf " ${OOB_EXEC_HEADER} \
 	    python ${exec_file} --pipeline_config_path ${model_name}.config \
+	        --batch_size ${batch_size} --num_examples ${num_iter} \
                 ${addtion_options} \
         > ${log_file} 2>&1 &  \n" |tee -a ${excute_cmd_file}
     done

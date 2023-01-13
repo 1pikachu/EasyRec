@@ -58,6 +58,8 @@ tf.app.flags.DEFINE_string('odps_config', None, help='odps config path')
 tf.app.flags.DEFINE_bool('is_on_ds', False, help='is on ds')
 tf.app.flags.DEFINE_bool('check_mode', False, help='is use check mode')
 tf.app.flags.DEFINE_string('selected_cols', None, help='')
+tf.app.flags.DEFINE_integer('batch_size', 1, help='')
+tf.app.flags.DEFINE_integer('num_examples', 200, help='')
 FLAGS = tf.app.flags.FLAGS
 
 
@@ -98,6 +100,9 @@ def main(argv):
             FLAGS.fine_tune_checkpoint, FLAGS.ignore_finetune_ckpt_error)
         config_json['train_config']['fine_tune_checkpoint'] = ckpt_path
       config_util.edit_config(pipeline_config, config_json)
+    else:
+      pipeline_config.data_config.batch_size = FLAGS.batch_size
+      pipeline_config.eval_config.num_examples = FLAGS.num_examples * FLAGS.batch_size
 
     process_neg_sampler_data_path(pipeline_config)
 

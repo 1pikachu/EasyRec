@@ -31,7 +31,7 @@ from easy_rec.python.utils.config_util import get_train_input_path
 from easy_rec.python.utils.config_util import set_eval_input_path
 from easy_rec.python.utils.export_big_model import export_big_model
 from easy_rec.python.utils.export_big_model import export_big_model_to_oss
-import train_hooks
+import hooks
 
 if tf.__version__ >= '2.0':
   gfile = tf.compat.v1.gfile
@@ -327,7 +327,7 @@ def _train_and_evaluate_impl(pipeline_config,
       check_mode=check_mode,
       **input_fn_kwargs)
   # Currently only a single Eval Spec is allowed.
-  train_hook = train_hooks.ExamplesPerSecondHook(data_config.batch_size, every_n_steps=4, warm_steps=20)
+  train_hook = hooks.ExamplesPerSecondHook(data_config.batch_size, every_n_steps=4, warm_steps=20)
   train_spec = tf.estimator.TrainSpec(
       input_fn=train_input_fn, max_steps=train_steps, hooks=[train_hook])
   # create eval spec
@@ -436,8 +436,9 @@ def evaluate(pipeline_config,
     # with tf.device(
     #    replica_device_setter(
     #        worker_device='/job:master/task:0', cluster=cluster)):
+    eval_hook = hooks.EvalHook(pipeline_config.data_config.batch_size, warm_steps=20)
     eval_result = estimator.evaluate(
-        eval_spec.input_fn, eval_spec.steps, checkpoint_path=ckpt_path)
+        eval_spec.input_fn, eval_spec.steps, checkpoint_path=ckpt_path, hooks=[eval_hook])
   logging.info('Evaluate finish')
 
   print('eval_result = ', eval_result)

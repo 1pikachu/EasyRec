@@ -5,6 +5,7 @@ import logging
 import os
 
 import six
+import json
 import tensorflow as tf
 from tensorflow.python.lib.io import file_io
 
@@ -33,11 +34,15 @@ tf.app.flags.DEFINE_multi_string(
     'override pipeline_config.eval_input_path')
 tf.app.flags.DEFINE_string('model_dir', None, help='will update the model_dir')
 tf.app.flags.DEFINE_string('odps_config', None, help='odps config path')
+tf.app.flags.DEFINE_string('edit_config_json', None, help='edit pipeline config str, example: {"model_dir":"experiments/",'
+    '"feature_config.feature[0].boundaries":[4,5,6,7]}')
 tf.app.flags.DEFINE_string('eval_result_path', 'eval_result.txt',
                            'eval result metric file')
 tf.app.flags.DEFINE_bool('distribute_eval', False,
                          'use distribute parameter server for train and eval.')
 tf.app.flags.DEFINE_bool('is_on_ds', False, help='is on ds')
+tf.app.flags.DEFINE_integer('batch_size', 1, help='')
+tf.app.flags.DEFINE_integer('num_examples', 200, help='')
 FLAGS = tf.app.flags.FLAGS
 
 
@@ -72,6 +77,13 @@ def main(argv):
                                       FLAGS.eval_result_path)
   else:
     os.environ['distribute_eval'] = 'False'
+    if FLAGS.edit_config_json:
+      pipeline_config = config_util.get_configs_from_pipeline_file(pipeline_config_path, False)
+      edit_config_json = json.loads(FLAGS.edit_config_json)
+      config_util.edit_config(pipeline_config, edit_config_json)
+    else:
+      pipeline_config.data_config.batch_size = FLAGS.batch_size
+      pipeline_config.eval_config.num_examples = FLAGS.num_examples * FLAGS.batch_size
     eval_result = evaluate(pipeline_config, FLAGS.checkpoint_path,
                            FLAGS.eval_input_path, FLAGS.eval_result_path)
   if eval_result is not None:
