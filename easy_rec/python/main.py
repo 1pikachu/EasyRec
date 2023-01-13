@@ -341,7 +341,7 @@ def _train_and_evaluate_impl(pipeline_config,
 def evaluate(pipeline_config,
              eval_checkpoint_path='',
              eval_data_path=None,
-             eval_result_filename='eval_result.txt'):
+             eval_result_filename='eval_result.txt', FLAGS=None):
   """Evaluate a EasyRec model defined in pipeline_config_path.
 
   Evaluate the model defined in pipeline_config_path on the eval data,
@@ -436,7 +436,7 @@ def evaluate(pipeline_config,
     # with tf.device(
     #    replica_device_setter(
     #        worker_device='/job:master/task:0', cluster=cluster)):
-    eval_hook = hooks.EvalHook(pipeline_config.data_config.batch_size, warm_steps=20)
+    eval_hook = hooks.EvalHook(pipeline_config.data_config.batch_size, warm_steps=20, tensorboard=FLAGS.tensorboard)
     eval_result = estimator.evaluate(
         eval_spec.input_fn, eval_spec.steps, checkpoint_path=ckpt_path, hooks=[eval_hook])
   logging.info('Evaluate finish')

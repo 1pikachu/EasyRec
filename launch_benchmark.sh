@@ -19,19 +19,6 @@ function main {
     exec_file="easy_rec/python/train_eval.py"
     if [ "${mode_name}" == "realtime" ];then
        cp -r /home2/tensorflow-broad-product/oob_tf_models/EasyRec/experiments .
-       if [ $(conda > /dev/null 2>&1 && echo $? ||echo $?) -eq 0 ];then
-           evaluation_file=$(find ${CONDA_PREFIX}/lib/ -name "evaluation.py" |\
-                   grep 'tensorflow/python/training/evaluation.py')
-       else
-           evaluation_file=$(find /usr/ -name "evaluation.py" |\
-                   grep 'tensorflow/python/training/evaluation.py')
-       fi
-       if [[ "${tensorboard}" == "1" ]];then
-           cp evaluation_profile.py ${evaluation_file}
-       else
-           cp evaluation.py ${evaluation_file}
-       fi
-
        exec_file="easy_rec/python/eval.py"
     fi 
 

@@ -43,6 +43,7 @@ tf.app.flags.DEFINE_bool('distribute_eval', False,
 tf.app.flags.DEFINE_bool('is_on_ds', False, help='is on ds')
 tf.app.flags.DEFINE_integer('batch_size', 1, help='')
 tf.app.flags.DEFINE_integer('num_examples', 200, help='')
+tf.app.flags.DEFINE_bool('tensorboard', False, help='collect tensorboard')
 FLAGS = tf.app.flags.FLAGS
 
 
@@ -85,7 +86,7 @@ def main(argv):
       pipeline_config.data_config.batch_size = FLAGS.batch_size
       pipeline_config.eval_config.num_examples = FLAGS.num_examples * FLAGS.batch_size
     eval_result = evaluate(pipeline_config, FLAGS.checkpoint_path,
-                           FLAGS.eval_input_path, FLAGS.eval_result_path)
+                           FLAGS.eval_input_path, FLAGS.eval_result_path, FLAGS)
   if eval_result is not None:
     # when distribute evaluate, only master has eval_result.
     for key in sorted(eval_result):

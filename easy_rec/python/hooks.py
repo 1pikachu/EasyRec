@@ -115,12 +115,13 @@ class ExamplesPerSecondHook(tf.estimator.SessionRunHook):
 
 
 class EvalHook(session_run_hook.SessionRunHook):
-    def __init__(self, batch_size, warm_steps=20):
+    def __init__(self, batch_size, warm_steps=20, tensorboard=False):
         self._step_eval_time = 0
         self._total_steps = 0
         self._total_measured_steps = 0
         self._batch_size = batch_size
         self._warm_steps = warm_steps
+        self._tensorboard = tensorboard
         
     def end(self, session):
         print("---------inference end---------")
@@ -132,6 +133,10 @@ class EvalHook(session_run_hook.SessionRunHook):
         print("inference Throughput:", average_examples_per_sec)
     
     def before_run(self, run_context):
+        if self._tensorboard and self._total_steps == self._warm_steps + 1:
+            print("---- collect tensorboard")
+            options = tf.profiler.experimental.ProfilerOptions(host_tracer_level = 3, python_tracer_level = 1, device_tracer_level = 1)
+            tf.profiler.experimental.start('./tensorboard_data/' , options = options)
         self.start_time = time.time()
     
     def after_run(self, run_context, run_values):
@@ -140,5 +145,8 @@ class EvalHook(session_run_hook.SessionRunHook):
             self._total_measured_steps += 1
             self._step_eval_time += duration
         print("Iteration: {}, inference time: {}".format(self._total_steps, duration))
+        if self._tensorboard and self._total_steps == self._warm_steps + 1:
+            tf.profiler.experimental.stop()
+            print("---- collect tensorboard end")
         self._total_steps += 1
 
