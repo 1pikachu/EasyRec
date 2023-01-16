@@ -144,7 +144,7 @@ class EvalHook(session_run_hook.SessionRunHook):
         if self._total_steps >= self._warm_steps:
             self._total_measured_steps += 1
             self._step_eval_time += duration
-        print("Iteration: {}, inference time: {}".format(self._total_steps, duration))
+        print("Iteration: {}, inference time: {}".format(self._total_steps, duration), flush=True)
         if self._tensorboard and self._total_steps == self._warm_steps + 1:
             tf.profiler.experimental.stop()
             print("---- collect tensorboard end")
