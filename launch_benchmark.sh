@@ -9,6 +9,7 @@ function main {
     set_environment
 
     # requirements
+    pip install protobuf==3.20.1
     ln -sf /home2/tensorflow-broad-product/oob_tf_models/EasyRec/dataset dataset
     pip uninstall easy-rec -y
     pip install .

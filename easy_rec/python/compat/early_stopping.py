@@ -33,7 +33,7 @@ from tensorflow.python.summary import summary_iterator
 from tensorflow.python.training import basic_session_run_hooks
 from tensorflow.python.training import session_run_hook
 from tensorflow.python.training import training_util
-from tensorflow.python.util.tf_export import estimator_export
+#from tensorflow.python.util.tf_export import estimator_export
 
 from easy_rec.python.utils.config_util import parse_time
 from easy_rec.python.utils.load_class import load_by_path
@@ -52,7 +52,7 @@ def find_early_stop_var(var_list):
   return None
 
 
-@estimator_export('estimator.experimental.make_early_stopping_hook')
+#@estimator_export('estimator.experimental.make_early_stopping_hook')
 def make_early_stopping_hook(estimator,
                              should_stop_fn,
                              run_every_secs=60,
@@ -104,7 +104,7 @@ def make_early_stopping_hook(estimator,
     return _CheckForStoppingHook()
 
 
-@estimator_export('estimator.experimental.stop_if_higher_hook')
+#@estimator_export('estimator.experimental.stop_if_higher_hook')
 def stop_if_higher_hook(estimator,
                         metric_name,
                         threshold,
@@ -161,7 +161,7 @@ def stop_if_higher_hook(estimator,
       run_every_steps=run_every_steps)
 
 
-@estimator_export('estimator.experimental.stop_if_lower_hook')
+#@estimator_export('estimator.experimental.stop_if_lower_hook')
 def stop_if_lower_hook(estimator,
                        metric_name,
                        threshold,
@@ -218,7 +218,7 @@ def stop_if_lower_hook(estimator,
       run_every_steps=run_every_steps)
 
 
-@estimator_export('estimator.experimental.stop_if_no_increase_hook')
+#@estimator_export('estimator.experimental.stop_if_no_increase_hook')
 def stop_if_no_increase_hook(estimator,
                              metric_name,
                              max_steps_without_increase,
@@ -319,7 +319,7 @@ def custom_early_stop_hook(estimator,
       run_every_steps=run_every_steps)
 
 
-@estimator_export('estimator.experimental.stop_if_no_decrease_hook')
+#@estimator_export('estimator.experimental.stop_if_no_decrease_hook')
 def stop_if_no_decrease_hook(estimator,
                              metric_name,
                              max_steps_without_decrease,
