@@ -327,7 +327,7 @@ def _train_and_evaluate_impl(pipeline_config,
       check_mode=check_mode,
       **input_fn_kwargs)
   # Currently only a single Eval Spec is allowed.
-  train_hook = hooks.ExamplesPerSecondHook(data_config.batch_size, every_n_steps=4, warm_steps=20)
+  train_hook = hooks.ExamplesPerSecondHook(data_config.batch_size, every_n_steps=4, warm_steps=20, tensorboard=FLAGS.tensorboard)
   train_spec = tf.estimator.TrainSpec(
       input_fn=train_input_fn, max_steps=train_steps, hooks=[train_hook])
   # create eval spec

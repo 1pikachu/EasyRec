@@ -24,7 +24,8 @@ class ExamplesPerSecondHook(tf.estimator.SessionRunHook):
                  batch_size,
                  every_n_steps=None,
                  every_n_secs=None,
-                 warm_steps=0):
+                 warm_steps=0,
+                 tensorboard=False):
         """Initializer for ExamplesPerSecondHook.
 
         Args:
@@ -54,6 +55,7 @@ class ExamplesPerSecondHook(tf.estimator.SessionRunHook):
         self._total_measured_steps = 0
         self._batch_size = batch_size
         self._warm_steps = warm_steps
+        self._tensorboard = tensorboard
 
     def begin(self):
         """Called once before using the session to check global step."""
@@ -80,6 +82,11 @@ class ExamplesPerSecondHook(tf.estimator.SessionRunHook):
         Returns:
           A SessionRunArgs object or None if never triggered.
         """
+        if self._tensorboard and self._total_measured_steps == self._warm_steps + 1:
+            print("---- collect tensorboard")
+            options = tf.profiler.experimental.ProfilerOptions(host_tracer_level = 3, python_tracer_level = 1, device_tracer_level = 1)
+            tf.profiler.experimental.start('./tensorboard_data/' , options = options)
+
         return tf.estimator.SessionRunArgs(self._global_step_tensor)
 
     def after_run(self, run_context, run_values):  # pylint: disable=unused-argument
@@ -90,6 +97,10 @@ class ExamplesPerSecondHook(tf.estimator.SessionRunHook):
           run_values: A SessionRunValues object.
         """
         global_step = run_values.results
+        if self._tensorboard and self._total_measured_steps == self._warm_steps + 1:
+            tf.profiler.experimental.stop()
+            print("---- collect tensorboard end")
+
         if self._timer.should_trigger_for_step(global_step):
           elapsed_time, elapsed_steps = self._timer.update_last_triggered_step(global_step)
           if elapsed_time is not None:
