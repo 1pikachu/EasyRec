@@ -60,6 +60,7 @@ tf.app.flags.DEFINE_bool('check_mode', False, help='is use check mode')
 tf.app.flags.DEFINE_string('selected_cols', None, help='')
 tf.app.flags.DEFINE_integer('batch_size', 1, help='')
 tf.app.flags.DEFINE_integer('num_examples', 200, help='')
+tf.app.flags.DEFINE_bool('tensorboard', False, help='collect tensorboard')
 FLAGS = tf.app.flags.FLAGS
 
 
@@ -119,7 +120,7 @@ def main(argv):
         config_util.edit_config(pipeline_config, hpo_params)
       config_util.auto_expand_share_feature_configs(pipeline_config)
       _train_and_evaluate_impl(pipeline_config, FLAGS.continue_train,
-                               FLAGS.check_mode)
+                               FLAGS.check_mode, FLAGS=None)
       hpo_util.save_eval_metrics(
           pipeline_config.model_dir,
           metric_save_path=FLAGS.hpo_metric_save_path,
@@ -127,7 +128,7 @@ def main(argv):
     else:
       config_util.auto_expand_share_feature_configs(pipeline_config)
       _train_and_evaluate_impl(pipeline_config, FLAGS.continue_train,
-                               FLAGS.check_mode)
+                               FLAGS.check_mode, FLAGS=None)
   else:
     raise ValueError('pipeline_config_path should not be empty when training!')
 
