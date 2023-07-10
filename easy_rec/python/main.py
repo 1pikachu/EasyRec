@@ -267,7 +267,7 @@ def train_and_evaluate(pipeline_config_path, continue_train=False):
 
 def _train_and_evaluate_impl(pipeline_config,
                              continue_train=False,
-                             check_mode=False):
+                             check_mode=False, FLAGS=None):
   train_config = pipeline_config.train_config
   data_config = pipeline_config.data_config
   feature_configs = config_util.get_compatible_feature_configs(pipeline_config)
