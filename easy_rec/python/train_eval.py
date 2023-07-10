@@ -120,7 +120,7 @@ def main(argv):
         config_util.edit_config(pipeline_config, hpo_params)
       config_util.auto_expand_share_feature_configs(pipeline_config)
       _train_and_evaluate_impl(pipeline_config, FLAGS.continue_train,
-                               FLAGS.check_mode, FLAGS=None)
+                               FLAGS.check_mode, FLAGS)
       hpo_util.save_eval_metrics(
           pipeline_config.model_dir,
           metric_save_path=FLAGS.hpo_metric_save_path,
@@ -128,7 +128,7 @@ def main(argv):
     else:
       config_util.auto_expand_share_feature_configs(pipeline_config)
       _train_and_evaluate_impl(pipeline_config, FLAGS.continue_train,
-                               FLAGS.check_mode, FLAGS=None)
+                               FLAGS.check_mode, FLAGS)
   else:
     raise ValueError('pipeline_config_path should not be empty when training!')
 

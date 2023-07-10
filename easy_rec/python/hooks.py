@@ -82,7 +82,7 @@ class ExamplesPerSecondHook(tf.estimator.SessionRunHook):
         Returns:
           A SessionRunArgs object or None if never triggered.
         """
-        if self._tensorboard and self._total_measured_steps == self._warm_steps + 1:
+        if self._tensorboard and self._total_measured_steps == 100:
             print("---- collect tensorboard")
             options = tf.profiler.experimental.ProfilerOptions(host_tracer_level = 3, python_tracer_level = 1, device_tracer_level = 1)
             tf.profiler.experimental.start('./tensorboard_data/' , options = options)
@@ -97,7 +97,7 @@ class ExamplesPerSecondHook(tf.estimator.SessionRunHook):
           run_values: A SessionRunValues object.
         """
         global_step = run_values.results
-        if self._tensorboard and self._total_measured_steps == self._warm_steps + 1:
+        if self._tensorboard and self._total_measured_steps == 100:
             tf.profiler.experimental.stop()
             print("---- collect tensorboard end")
 
